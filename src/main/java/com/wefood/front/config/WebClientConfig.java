@@ -17,8 +17,8 @@ public class WebClientConfig implements WebMvcConfigurer {
     @Bean(name = "restTemplate")
     public RestTemplate restTemplate(RestTemplateBuilder builder) {
         return builder
-                .setConnectTimeout(Duration.ofSeconds(3L))
-                .setReadTimeout(Duration.ofSeconds(3L))
+                .setConnectTimeout(Duration.ofSeconds(30L))
+                .setReadTimeout(Duration.ofSeconds(30L))
                 .build();
     }
 
