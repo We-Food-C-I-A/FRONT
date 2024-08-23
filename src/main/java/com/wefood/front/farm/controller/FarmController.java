@@ -30,7 +30,7 @@ public class FarmController {
         PageRequest<FarmListResponse> farms = farmService.getFarms(page, size);
         model.addAttribute("farms", farms);
         model.addAttribute("page", page);
-        return "/farms";
+        return "farms";
     }
 
     @GetMapping("/{id}")
@@ -47,6 +47,6 @@ public class FarmController {
         PageRequest<ProductResponse> products = farmService.getProductsByFarm(id, page, size);
         model.addAttribute("products", products);
 
-        return "/farm-detail";
+        return "farm-detail";
     }
 }
