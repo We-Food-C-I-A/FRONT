@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Error Page</title>
+    <meta charset="UTF-8">
+</head>
+<body>
+<h1>An error has occurred</h1>
+<!-- 여기서 errorMessage를 출력합니다 -->
+<p th:text="${errorMessage}">왜 이런걸까요.</p>
+<a href="/" th:href="@{/}">Go back to Home</a>
+</body>
+</html>
