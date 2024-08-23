@@ -73,6 +73,169 @@
             /* 동적으로 추가된 요소들이 애니메이션에 맞춰야 함 */
         }
 
+
+        .farm-info-card {
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+
+        .farm-info-content {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .farm-name {
+            color: #333;
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #4CAF50;
+        }
+
+        .farm-detail-container {
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            padding: 15px;
+        }
+
+        .farm-detail {
+            color: #666;
+            font-size: 16px;
+            line-height: 1.6;
+            margin-bottom: 0;
+        }
+
+        .farm-info-card {
+            border: none;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            border-radius: 15px;
+            overflow: hidden;
+        }
+
+        .farm-info-header {
+            background: linear-gradient(135deg, #4CAF50, #45a049);
+            color: white;
+            padding: 20px;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .farm-info-body {
+            padding: 30px;
+        }
+
+        .farm-name {
+            color: #333;
+            font-size: 28px;
+            margin-bottom: 15px;
+        }
+
+        .farm-detail {
+            color: #666;
+            font-size: 16px;
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+
+        .carousel-item {
+            height: 400px;
+        }
+
+        .carousel-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 10px;
+        }
+
+        .carousel-caption {
+            background-color: rgba(0, 0, 0, 0.7);
+            border-radius: 5px;
+        }
+
+        .image-upload-form {
+            margin-top: 30px;
+            background-color: #f9f9f9;
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        .btn-custom {
+            background-color: #4CAF50;
+            border: none;
+            padding: 10px 20px;
+            color: white;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        .btn-custom:hover {
+            background-color: #45a049;
+        }
+
+
+        .image-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 20px;
+            padding: 20px;
+        }
+
+        .image-grid-item {
+            position: relative;
+            overflow: hidden;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .image-grid-item:hover {
+            transform: scale(1.05);
+        }
+
+        .image-grid-item img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            display: block;
+        }
+
+        .image-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background-color: rgba(0, 0, 0, 0.7);
+            overflow: hidden;
+            width: 100%;
+            height: 0;
+            transition: .5s ease;
+        }
+
+        .image-grid-item:hover .image-overlay {
+            height: 100%;
+        }
+
+        .overlay-text {
+            color: white;
+            font-size: 20px;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+        }
+
+        @media (max-width: 768px) {
+            .image-grid {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            }
+        }
+
     </style>
 </head>
 <body class="goto-here">
@@ -244,27 +407,44 @@
             </div>
             <div class="col-md-12 tab-wrap">
 
-                <div class="tab-content bg-light" id="v-pills-tabContent">
-                    <h2 style="margin: 0; padding: 15px; border-bottom: 1px solid">농가 소개</h2>
+                <div class="tab-content" id="v-pills-tabContent">
                     <div class="tab-pane fade show active" id="v-pills-1" role="tabpanel" aria-labelledby="day-1-tab">
                         <!--농가 소개-->
-                        <div>
-                            <div class="d-flex w-100">
-                                <div class="slider">
+                        <div class="farm-info-card">
+                            <div class="farm-info-body">
+                                <div class="farm-info-content">
+                                    <a th:href="'/farm/'+${product.farmId}">
+                                        <h2 th:text="${product.farmName}" style="color: #1c7430; font-weight: bold;"></h2></a>
+                                    <div class="farm-detail-container">
+                                        <h4 class="mt-2" th:text="${product.farmDetail}"></h4>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="image-upload-form" style="padding: 0 30px">
+                                <div class="slider w-100">
                                     <button class="prev" onclick="changeSlide(-1)">&#60;</button>
                                     <div class="slides">
-                                            <img onclick="slide" th:each="farmImg: ${farmImgs}" th:src="${farmImg.img}" alt="image" class="slide img-thumbnail" style="aspect-ratio: 4/3;">
+                                        <img onclick="slide" th:each="farmImg: ${farmImgs}" th:src="${farmImg.img}"
+                                             alt="image" class="slide img-thumbnail" style="aspect-ratio: 4/3;">
                                     </div>
                                     <button class="next" onclick="changeSlide(1)">&#62;</button>
                                 </div>
-                                <div class="text-content">
-                                    <a th:href="'/farm/'+${product.farmId}"><h2 th:text="${product.farmName}" style="color: #1c7430;"></h2></a>
-                                    <h4 class="mt-5" th:text="${product.farmDetail}"></h4>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="detail-container">
+                                <div class="check-point w-75 mb-4">
+                                    <h1>확인하세요!</h1>
+                                    <div class="detail-line"></div>
+                                </div>
+                                <div class="detail-name mb-5">
+                                    <p th:text="${product.name}"></p>
+                                </div>
+                                <div class="detail">
+                                    <p th:text="${product.detail}"></p>
                                 </div>
                             </div>
                         </div>
-                        <div class="w-100" style="border: 10px solid #fff"></div>
-                        <div class="p-4" th:text="${product.detail}"></div>
                         <div th:each="productImg:${productImgs}">
                             <img th:src="${productImg.img}" alt="product image" class="img-100">
                         </div>
