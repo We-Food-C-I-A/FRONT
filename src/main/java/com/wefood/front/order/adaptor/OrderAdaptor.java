@@ -10,10 +10,8 @@ import com.wefood.front.order.dto.request.OrderCreateRequest;
 import com.wefood.front.order.dto.request.ReviewCreateRequest;
 import com.wefood.front.order.dto.response.OrderDetailGetResponse;
 import com.wefood.front.order.dto.response.OrderGetResponse;
-import com.wefood.front.user.dto.response.LoginResponse;
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
@@ -23,17 +21,21 @@ import java.net.URI;
 import java.util.List;
 
 import static org.springframework.http.HttpMethod.GET;
-import static org.springframework.http.HttpMethod.POST;
 
 @Component
-@RequiredArgsConstructor
 public class OrderAdaptor {
 
+    @Qualifier("restTemplate")
     private final RestTemplate restTemplate;
 
     private final BackAdaptorProperties backAdaptorProperties;
 
     private static final String URL = "/api/orders";
+
+    public OrderAdaptor(RestTemplate restTemplate, BackAdaptorProperties backAdaptorProperties) {
+        this.restTemplate = restTemplate;
+        this.backAdaptorProperties = backAdaptorProperties;
+    }
 
     public List<ReviewGetResponse> findOrderReviewList(Long id) {
 

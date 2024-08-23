@@ -11,6 +11,7 @@ import com.wefood.front.user.dto.response.FarmResponse;
 import com.wefood.front.user.dto.response.LoginResponse;
 import com.wefood.front.user.dto.response.UserGetResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.FileSystemResource;
@@ -33,13 +34,18 @@ import static org.springframework.http.HttpMethod.GET;
 import static org.springframework.http.HttpMethod.POST;
 
 @Component
-@RequiredArgsConstructor
 public class UserAdaptor {
 
+    @Qualifier("restTemplate")
     private final RestTemplate restTemplate;
 
     private final BackAdaptorProperties backAdaptorProperties;
     private static final String URL = "/api/users";
+
+    public UserAdaptor(RestTemplate restTemplate, BackAdaptorProperties backAdaptorProperties) {
+        this.restTemplate = restTemplate;
+        this.backAdaptorProperties = backAdaptorProperties;
+    }
 
     public void signUp(SignRequest signRequest) {
         ResponseEntity<Void> responseEntity = restTemplate.postForEntity(backAdaptorProperties.getAddress() + URL, signRequest, Void.class);

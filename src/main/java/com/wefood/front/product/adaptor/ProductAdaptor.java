@@ -5,6 +5,7 @@ import com.wefood.front.global.Message;
 import com.wefood.front.global.PageRequest;
 import com.wefood.front.product.dto.ProductDetailResponse;
 import com.wefood.front.product.dto.ProductResponse;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
 import org.springframework.stereotype.Component;
@@ -18,6 +19,7 @@ import java.util.List;
 @Component
 public class ProductAdaptor {
 
+    @Qualifier("restTemplate")
     private final RestTemplate restTemplate;
     private final BackAdaptorProperties backAdaptorProperties;
     private static final String productURL = "/api/product";

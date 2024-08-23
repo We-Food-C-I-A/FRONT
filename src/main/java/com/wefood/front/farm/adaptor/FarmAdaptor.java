@@ -6,6 +6,7 @@ import com.wefood.front.global.Message;
 import com.wefood.front.global.PageRequest;
 import com.wefood.front.product.dto.ProductResponse;
 import com.wefood.front.user.dto.response.FarmResponse;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
 import org.springframework.stereotype.Component;
@@ -18,6 +19,7 @@ import java.net.URI;
 public class FarmAdaptor {
 
     private final BackAdaptorProperties properties;
+    @Qualifier("restTemplate")
     private final RestTemplate restTemplate;
 
     public FarmAdaptor(BackAdaptorProperties properties, RestTemplate restTemplate) {

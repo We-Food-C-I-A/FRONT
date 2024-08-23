@@ -4,6 +4,7 @@ import com.wefood.front.config.BackAdaptorProperties;
 import com.wefood.front.global.Message;
 import com.wefood.front.order.dto.CartProductRequest;
 import com.wefood.front.order.dto.CartResponse;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
 import org.springframework.stereotype.Component;
@@ -17,6 +18,7 @@ import java.util.List;
 public class CartAdaptor {
 
     private static final String URL = "/api/cart";
+    @Qualifier("restTemplate")
     private final RestTemplate restTemplate;
     private final BackAdaptorProperties backAdaptorProperties;
 
