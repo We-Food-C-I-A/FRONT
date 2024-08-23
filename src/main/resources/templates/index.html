@@ -21,16 +21,40 @@
     <link rel="stylesheet" href="/css/bootstrap-datepicker.css">
     <link rel="stylesheet" href="/css/jquery.timepicker.css">
 
-
     <link rel="stylesheet" href="/css/flaticon.css">
     <link rel="stylesheet" href="/css/icomoon.css">
     <link rel="stylesheet" href="/css/style.css">
+    <style>
+        /* 모달의 크기 조정 */
+        .modal-dialog {
+            position: fixed;
+            bottom: 180px; /* 버튼 위로 위치 */
+            right: 20px; /* 버튼 오른쪽 끝과 맞추기 */
+            margin: 0;
+            width: 450px; /* 너비를 1.5배로 증가 */
+            height: 600px; /* 높이를 3배로 증가 */
+        }
+
+        .modal-content {
+            border-radius: 10px 10px 0 0; /* 모서리를 둥글게 */
+            height: 100%; /* 모달 내용이 전체 높이를 채우도록 설정 */
+        }
+
+        /* 모달 버튼 스타일 */
+        .modal-btn-fixed {
+            position: fixed;
+            bottom: 20px; /* 화면 하단에서 20px 위 */
+            right: 20px;  /* 화면 오른쪽에서 20px 왼쪽 */
+            z-index: 1000; /* 버튼이 다른 요소들보다 위에 있도록 */
+            padding: 15px 30px; /* 버튼 패딩을 키워서 크기 증가 */
+            font-size: 1.5rem; /* 폰트 크기 증가 */
+        }
+    </style>
 </head>
 <body class="goto-here">
 
 <!--회원가입, 로그인, 로그아웃, 마이페이지-->
 <div class="container user-head" th:if="${login}">
-
     <th:block th:if="${isSeller}">
         <a href="/farm">농가정보</a>
     </th:block>
@@ -43,6 +67,13 @@
     <a href="/login">로그인</a>
 </div>
 
+<!-- 모달 콘텐츠를 포함시킴 -->
+<div th:replace="~{chat-modal :: modal}"></div>
+
+<!-- 모달 버튼 -->
+<button type="button" class="btn btn-primary modal-btn-fixed" data-toggle="modal" data-target="#myModal">
+    Open Modal
+</button>
 <!--검색창-->
 <div class="container" style="display: flex; justify-content: space-between; align-items: center">
     <a class="navbar-brand" href="/"><img src="/images/logo.png" alt="logo" class="logo-img"></a>
@@ -143,7 +174,7 @@
                         <h3><a th:href="'/'+${product.id}" th:text="${product.name}"></a></h3>
                         <div class="pricing">
                             <p class="price"><span
-                                    th:text="${#numbers.formatInteger(product.price, 3, 'COMMA')}+'원'"></span></p>
+                                th:text="${#numbers.formatInteger(product.price, 3, 'COMMA')}+'원'"></span></p>
                         </div>
                     </div>
                 </div>
@@ -547,6 +578,30 @@
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBVWaKrjvy3MaE7SQ74_uJiULgl1JY0H2s&sensor=false"></script>
 <script src="/js/google-map.js"></script>
 <script src="/js/main.js"></script>
-
+<script>
+    function updateModalContent(url) {
+        $.ajax({
+            url: url,
+            type: 'GET',
+            dataType: 'json',
+            success: function (data) {
+                // 서버에서 받은 데이터를 사용해 모달의 내용을 업데이트
+                $('#modalContent').html(`
+                <h6>농장 정보</h6>
+                <p>${data.farm.id}</p>
+                <h6>질문 리스트</h6>
+                <ul>
+                    ${data.quest.map(q => `<li>${q}</li>`).join('')}
+                </ul>
+            `);
+                // 모달을 표시
+                $('#myModal').modal('show');
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                console.error("Error loading modal content: " + textStatus);
+            }
+        });
+    }
+</script>
 </body>
 </html>

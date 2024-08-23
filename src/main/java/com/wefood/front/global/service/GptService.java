@@ -103,7 +103,7 @@ public class GptService {
             log.info(text);
 
             String jsonPart = text.substring(text.indexOf("{"));
-
+            log.info(jsonPart);
             // ObjectMapper를 사용해 문자열을 JsonNode로 변환
             ObjectMapper objectMapper = new ObjectMapper();
             JsonNode jsonNode = objectMapper.readTree(jsonPart);
@@ -119,10 +119,6 @@ public class GptService {
             // 파싱된 값 출력
             log.info("Name: " + name);
             log.info("Detail: " + detail);
-            log.info("Tags: ");
-            for (String tag : tags) {
-                log.info(tag + " ");
-            }
             return jsonNode;
         } catch (Exception e) {
             log.error(e.toString());

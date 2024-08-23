@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+<head>
+    <title>Chat Bot Modal</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <style>
+        /* 스타일 내용은 그대로 유지 */
+    </style>
+
+</head>
+<body>
+<div th:fragment="modal">
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">무엇을 도와드릴까요?</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div id="modalContent">
+                        <!-- 여기서 quest 리스트의 내용이 표시됩니다 -->
+                    </div>
+                    <!-- 기존 버튼을 새로운 버튼으로 교체 -->
+                    <button id="button1" class="hideable" onclick="updateModalContent('/modalContent1')">상품 등록</button>
+                </div>
+                <div class="modal-footer">
+                    <div class="input-group mb-3">
+                        <input type="text" class="form-control disabled-input" placeholder="작성란" aria-label="Input field" aria-describedby="button-addon2" disabled>
+                        <div class="input-group-append">
+                            <button class="btn btn-outline-secondary disabled-button" type="button" id="button-addon2" disabled>입력</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Bootstrap과 jQuery 포함 -->
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+
+<!-- 자바스크립트 코드 -->
+
+</body>
+</html>
