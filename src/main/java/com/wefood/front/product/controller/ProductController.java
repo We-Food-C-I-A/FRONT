@@ -52,16 +52,16 @@ public class ProductController {
         ProductDetailResponse productDetail = productService.getProductDetail(productId);
         List<MarketPriceItemResponse> marketPrice;
 
-        if (item == null) {
-            List<MarketPriceResponse> marketPriceResponses = marketPriceService.saveMarketPrice(response, "price");
-            marketPrice = marketPriceService.findMarketPriceByItemId(productDetail.getItemId(), marketPriceResponses);
-
-        } else {
-            marketPrice = marketPriceService.getMarketPriceCookie(productDetail.getItemId(), request.getCookies());
-        }
-
+//        if (item == null) {
+//            List<MarketPriceResponse> marketPriceResponses = marketPriceService.saveMarketPrice(response, "price");
+//            marketPrice = marketPriceService.findMarketPriceByItemId(productDetail.getItemId(), marketPriceResponses);
+//
+//        } else {
+//            marketPrice = marketPriceService.getMarketPriceCookie(productDetail.getItemId(), request.getCookies());
+//        }
+//
+//        model.addAttribute("marketPrices", marketPrice);
         List<ReviewGetResponse> list = orderAdaptor.findProductReview(productId);
-        model.addAttribute("marketPrices", marketPrice);
 
 
         model.addAttribute("thumbnail", productDetail.getProductImg().get(0).getImg());
