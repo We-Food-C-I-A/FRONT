@@ -1,6 +1,7 @@
 package com.wefood.front.product.adaptor;
 
 import com.wefood.front.config.MarketPriceProperties;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.*;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
@@ -13,6 +14,7 @@ import java.time.LocalDate;
 public class MarketPriceAdaptor {
 
     private final MarketPriceProperties marketPriceProperties;
+    @Qualifier("restTemplate")
     private final RestTemplate restTemplate;
 
     public MarketPriceAdaptor(MarketPriceProperties marketPriceProperties, RestTemplate restTemplate) {
