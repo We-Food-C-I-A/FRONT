@@ -15090,6 +15090,7 @@ a:hover {
     font-size: 0.95rem;
     line-height: 1.6;
 }
+
 .review {
     border-bottom: 1px solid #e6e6e6;
     padding: 20px 0;
@@ -15115,6 +15116,7 @@ a:hover {
 .reply:hover {
     text-decoration: underline;
 }
+
 /*farm slider*/
 .slider {
     position: relative;
@@ -15158,4 +15160,38 @@ a:hover {
 .text-content {
     width: 50%;
     padding: 20px;
+}
+
+.detail-container {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 4/3;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #fff !important;
+    flex-direction: column;
+}
+
+.detail-name {
+    font-weight: bold;
+    color: #1c7430;
+    font-size: 4rem;
+    text-align: center;
+    width: 80%;
+}
+
+.detail {
+    font-size: 3em;
+    color: #000;
+    text-align: center;
+    width: 70%;
+}
+
+.detail-line {
+    border-bottom: 2px solid dimgray;
+}
+
+.check-point {
+    text-align: center;
 }
