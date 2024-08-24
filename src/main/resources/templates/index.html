@@ -608,7 +608,7 @@
                     `).join('')}
                 </ul>
                 <div class="modal-footer">
-                    <button class="btn btn-primary" style="height: 40px; font-size: 18px; id="submitBtn">제출</button>
+                    <button class="btn btn-primary" style="height: 40px; font-size: 18px;" id="submitBtn">제출</button>
                 </div>
             `);
 
@@ -617,6 +617,7 @@
 
                 // 제출 버튼 클릭 이벤트 핸들러 등록
                 $('#submitBtn').click(function() {
+                    console.log("test")
                     submitFormData(data.quest.length);
                 });
 
