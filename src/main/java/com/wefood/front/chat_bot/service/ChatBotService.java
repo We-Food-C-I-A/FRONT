@@ -3,8 +3,13 @@ package com.wefood.front.chat_bot.service;
 import com.wefood.front.chat_bot.adaptor.ChatBotAdaptor;
 import com.wefood.front.product.dto.UploadImageRequestDto;
 import com.wefood.front.product.dto.UploadThumbnailRequestDto;
+import java.awt.Image;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
