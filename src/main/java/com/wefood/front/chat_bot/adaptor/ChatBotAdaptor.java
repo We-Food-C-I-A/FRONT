@@ -81,18 +81,21 @@ public class ChatBotAdaptor {
         }
     }
 
-    public void sendImageRequest(UploadImageRequestDto requestDto, boolean isProduct)
-        throws IOException {
+    public void sendImageRequest(UploadImageRequestDto requestDto, boolean isProduct) throws IOException {
+        // URL 선택: 제품인지 농장인지에 따라 다름
         String url = isProduct ? PRODUCT_URL : FARM_URL;
 
+        // HTTP 헤더 설정: 멀티파트 폼 데이터로 설정
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.MULTIPART_FORM_DATA);
 
+        // URI 빌드
         URI uri = UriComponentsBuilder.fromUriString(backAdaptorProperties.getAddress())
             .path(url)
             .build()
             .toUri();
 
+        // 요청 본문 생성
         MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
         body.add("id", requestDto.getId());
 
@@ -107,8 +110,10 @@ public class ChatBotAdaptor {
             });
         }
 
+        // HttpEntity 생성
         HttpEntity<MultiValueMap<String, Object>> entity = new HttpEntity<>(body, headers);
 
+        // 서버로 요청 보내기
         try {
             ResponseEntity<Void> response = restTemplate.exchange(
                 uri,
@@ -117,11 +122,13 @@ public class ChatBotAdaptor {
                 Void.class
             );
 
+            // 응답 상태 확인
             if (response.getStatusCode() != HttpStatus.CREATED) {
                 throw new IOException("Failed to upload thumbnail. Status code: " + response.getStatusCode());
             }
 
         } catch (Exception e) {
+            // 예외 처리
             throw new IOException("Error writing request body to server", e);
         }
     }

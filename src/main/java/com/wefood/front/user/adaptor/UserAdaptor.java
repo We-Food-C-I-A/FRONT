@@ -61,20 +61,20 @@ public class UserAdaptor {
     }
 
     public void farmImageCreate(MultipartFile[] multipartFiles, Long id) throws IOException {
-
+        System.out.println(multipartFiles[1].getName());
         String url = backAdaptorProperties.getAddress() + "/api/farm/upload-part";
-
+        System.out.println(url);
         // URL에 id를 쿼리 파라미터로 추가
         UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
                 .queryParam("id", id);
 
         // MultiValueMap을 사용하여 멀티파트 요청 본문 구성
         MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
-
         // 파일들을 본문에 추가
         for (MultipartFile file : multipartFiles) {
             body.add("files", new FileSystemResource(convert(file)));
         }
+        System.out.println();
 
         // HTTP 헤더 설정
         HttpHeaders headers = new HttpHeaders();
