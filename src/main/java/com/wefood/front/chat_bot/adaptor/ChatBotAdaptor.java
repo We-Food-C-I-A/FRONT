@@ -5,8 +5,11 @@ import com.wefood.front.product.dto.UploadImageRequestDto;
 import com.wefood.front.product.dto.UploadThumbnailRequestDto;
 import java.io.IOException;
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -86,50 +89,45 @@ public class ChatBotAdaptor {
         String url = isProduct ? PRODUCT_URL : FARM_URL;
 
         // HTTP 헤더 설정: 멀티파트 폼 데이터로 설정
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.MULTIPART_FORM_DATA);
-
-        // URI 빌드
+//        HttpHeaders headers = new HttpHeaders();
+//        headers.setContentType(MediaType.MULTIPART_FORM_DATA);
+//
+//        // URI 빌드
         URI uri = UriComponentsBuilder.fromUriString(backAdaptorProperties.getAddress())
             .path(url)
             .build()
             .toUri();
-        System.out.println(uri.toString());
-        // 요청 본문 생성
         MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
         body.add("id", requestDto.getId());
 
-        // 여러 파일 추가
         List<MultipartFile> files = requestDto.getFiles();
+
         for (MultipartFile file : files) {
-            body.add("files", new ByteArrayResource(file.getBytes()) {
-                @Override
-                public String getFilename() {
-                    return file.getOriginalFilename();
-                }
-            });
+            if (!file.isEmpty()) {
+                ByteArrayResource resource = new ByteArrayResource(file.getBytes()) {
+                    @Override
+                    public String getFilename() {
+                        return file.getOriginalFilename(); // 원래 파일 이름을 반환하도록 설정
+                    }
+                };
+                body.add("files", resource); // 각 파일을 하나씩 추가
+            }
         }
 
-        // HttpEntity 생성
+// HTTP 헤더 설정
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.MULTIPART_FORM_DATA);
+
+// HttpEntity 생성
         HttpEntity<MultiValueMap<String, Object>> entity = new HttpEntity<>(body, headers);
 
-        // 서버로 요청 보내기
-        try {
-            ResponseEntity<Void> response = restTemplate.exchange(
-                uri,
-                HttpMethod.POST,
-                entity,
-                Void.class
-            );
-
-            // 응답 상태 확인
-            if (response.getStatusCode() != HttpStatus.CREATED) {
-                throw new IOException("Failed to upload thumbnail. Status code: " + response.getStatusCode());
+// 요청 보내기
+        ResponseEntity<Map<String, Object>> result = restTemplate.exchange(
+            uri,
+            HttpMethod.POST,
+            entity,
+            new ParameterizedTypeReference<Map<String, Object>>() {
             }
-
-        } catch (Exception e) {
-            // 예외 처리
-            throw new IOException("Error writing request body to server", e);
-        }
+        );
     }
 }
