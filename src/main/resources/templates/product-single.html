@@ -339,7 +339,7 @@
                     <div class="text-roller">
                         <div class="roller">
                             <select style="width: 100%; height: 100%;">
-                                <option selected th:text="${marketPrices}?'시세 조회':'등록된 시세가 존재하지 않습니다'"></option>
+                                <option selected th:text="${#lists.isEmpty(marketPrices)}?'등록된 시세가 존재하지 않습니다':'시세 조회'"></option>
                                 <option th:if="${marketPrices}" th:each="line : ${marketPrices}"
                                         th:text="${line.item_name}+' '+${line.kind_name}+' '+${line.rank}+' '+${line.dpr2}+'원'"></option>
                             </select>

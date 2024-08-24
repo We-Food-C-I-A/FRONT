@@ -193,11 +193,11 @@ public class UserController {
     }
 
 
-    @PostMapping("/farm-image")
-    public String farmImage(@RequestParam("images") MultipartFile[] files, @RequestParam Long id) throws IOException {
-        userAdaptor.farmImageCreate(files, id);
-        return "redirect:/";
-    }
+//    @PostMapping("/farm-image")
+//    public String farmImage(@RequestParam("images") MultipartFile[] files, @RequestParam Long id) throws IOException {
+//        userAdaptor.farmImageCreate(files, id);
+//        return "redirect:/";
+//    }
 
 
     @PostMapping("/{id}/address")
