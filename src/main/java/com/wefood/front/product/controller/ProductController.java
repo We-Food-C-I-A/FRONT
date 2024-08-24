@@ -38,7 +38,7 @@ public class ProductController {
     }
 
     @GetMapping("/search/category/{categoryId}")
-    public String searchCategory(@PathVariable(name = "categoryId") Long categoryId, @RequestParam(defaultValue = "0") Long page, @RequestParam(defaultValue = "10") Long size, Model model) {
+    public String searchCategory(@PathVariable(name = "categoryId") Long categoryId, @RequestParam(defaultValue = "0") Long page, @RequestParam(defaultValue = "9") Long size, Model model) {
         PageRequest<ProductResponse> productsByCategory = productService.getProductsByCategory(categoryId, page, size);
         model.addAttribute("products", productsByCategory);
         model.addAttribute("categoryId", categoryId);
@@ -48,7 +48,8 @@ public class ProductController {
     }
 
     @GetMapping("/{productId}")
-    public String productDetail(@PathVariable(name = "productId") Long productId, Model model, @CookieValue(name = "name", required = false) String name, @CookieValue(name = "phoneNumber", required = false) String phoneNumber, @CookieValue(name = "id", required = false) Long id, HttpServletRequest request, HttpServletResponse response, @CookieValue(name = "price0", required = false) String item) {
+    public String productDetail(@PathVariable(name = "productId") Long productId, Model model, @CookieValue(name = "name", required = false) String name, @CookieValue(name = "phoneNumber", required = false) String phoneNumber,
+                                @CookieValue(name = "id", required = false) Long id, HttpServletRequest request, HttpServletResponse response, @CookieValue(name = "price0", required = false) String item) {
         ProductDetailResponse productDetail = productService.getProductDetail(productId);
         List<MarketPriceItemResponse> marketPrice;
 
@@ -82,7 +83,7 @@ public class ProductController {
     }
 
     @GetMapping("/search")
-    public String search(@ModelAttribute(name = "search_word") String searchWord, Model model, @RequestParam(defaultValue = "0") Long page, @RequestParam(defaultValue = "10") Long size) {
+    public String search(@ModelAttribute(name = "search_word") String searchWord, Model model, @RequestParam(defaultValue = "0") Long page, @RequestParam(defaultValue = "9") Long size) {
         PageRequest<ProductResponse> productsBySearch = productService.getProductsBySearch(searchWord, page, size);
 
         model.addAttribute("search", searchWord);
