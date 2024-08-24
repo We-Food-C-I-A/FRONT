@@ -61,7 +61,6 @@
     <a href="/mypage">마이페이지</a>
     <a href="/logout">로그아웃</a>
 </div>
-
 <div class="container user-head" th:unless="${login}">
     <a href="/sign">회원가입</a>
     <a href="/login">로그인</a>
@@ -71,8 +70,8 @@
 <div th:replace="~{chat-modal :: modal}"></div>
 
 <!-- 모달 버튼 -->
-<button type="button" class="btn btn-primary modal-btn-fixed" data-toggle="modal" data-target="#myModal">
-    Open Modal
+<button th:if="${isSeller}" type="button" class="btn btn-primary modal-btn-fixed" data-toggle="modal" data-target="#myModal">
+    AI 상품 등록
 </button>
 <!--검색창-->
 <div class="container" style="display: flex; justify-content: space-between; align-items: center">
@@ -579,29 +578,254 @@
 <script src="/js/google-map.js"></script>
 <script src="/js/main.js"></script>
 <script>
+    let dataLet;
+    let name;
+    let detail;
+    let tags;
+    let selectedValue;
+    let price;
+    let productId;
     function updateModalContent(url) {
         $.ajax({
             url: url,
             type: 'GET',
             dataType: 'json',
             success: function (data) {
+                dataLet =data;
                 // 서버에서 받은 데이터를 사용해 모달의 내용을 업데이트
                 $('#modalContent').html(`
                 <h6>농장 정보</h6>
-                <p>${data.farm.id}</p>
+                <p>${data.farm.name}</p>
                 <h6>질문 리스트</h6>
                 <ul>
-                    ${data.quest.map(q => `<li>${q}</li>`).join('')}
+                    ${data.quest.map((q, index) => `
+                        <li>
+                            ${q}
+                            <br>
+                            <input type="text" id="input${index}" placeholder="답변을 입력하세요"/>
+                        </li>
+                    `).join('')}
                 </ul>
+                <div class="modal-footer">
+                    <button class="btn btn-primary" style="height: 40px; font-size: 18px; id="submitBtn">제출</button>
+                </div>
             `);
+
                 // 모달을 표시
                 $('#myModal').modal('show');
+
+                // 제출 버튼 클릭 이벤트 핸들러 등록
+                $('#submitBtn').click(function() {
+                    submitFormData(data.quest.length);
+                });
+
             },
             error: function (jqXHR, textStatus, errorThrown) {
                 console.error("Error loading modal content: " + textStatus);
             }
         });
     }
+    function closeComeBack(){
+        alert("취소되었습니다.")
+        window.location.href = "/";
+    }
+    function submitFormData2(name, detail, tags, farmId, selectedValue, price) {
+        const data = {
+            title: name,
+            detail: detail,
+            tagName: tags,
+            farmId: farmId,
+            categoryId  : selectedValue,
+            price: price
+        };
+
+        $.ajax({
+            url: '/create-product',
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify(data),
+            success: function(response) {
+                console.log('Product created successfully!', response);
+                $('#modalContent').html(
+                    `<h6>상품이 정상적으로 등록되었습니다.</h6>
+     <br>
+     <h6>대표 사진을 등록해 주세요.</h6>
+     <br>
+     <form id="thumbnailUploadForm" enctype="multipart/form-data">
+        <input type="file" id="thumbnailFile" name="files" accept="image/*" required />
+        <button type="button" class="btn btn-primary" style="height: 40px; font-size: 18px; id="uploadThumbnailButton">썸네일 업로드</button>
+     </form>
+    `
+                );
+                productId=response.productId
+                $('#uploadThumbnailButton').click(function() {
+                    const fileInput = document.getElementById('thumbnailFile');
+                    const file = fileInput.files[0];
+
+                    if (!file) {
+                        alert("파일을 선택해 주세요.");
+                        return;
+                    }
+
+                    const formData = new FormData();
+                    formData.append("id", productId);  // productId는 서버에서 생성된 상품의 ID
+                    formData.append("files", file);    // 선택한 파일을 폼 데이터에 추가
+
+                    $.ajax({
+                        url: '/product/thumbnail',
+                        type: 'POST',
+                        data: formData,
+                        processData: false, // 필수: jQuery가 데이터를 문자열로 처리하지 않도록 설정
+                        contentType: false, // 필수: jQuery가 Content-Type 헤더를 설정하지 않도록 설정
+                        success: function (response) {
+                            alert('썸네일이 성공적으로 업로드되었습니다.');
+                            $('#modalContent').html(
+                                `<h6>대표 사진이 정상적으로 등록되었습니다.</h6>
+                                 <br>
+                                 <h6>마지막으로 상품 소개 사진들을 등록해 주세요. (최대 5개)</h6>
+                                 <br>
+                                 <form id="additionalImagesForm" enctype="multipart/form-data">
+                                    <input type="file" id="additionalImages" name="additionalFiles" accept="image/*" multiple required />
+                                    <button type="button" class="btn btn-primary" id="uploadAdditionalImagesButton">상품 사진 업로드</button>
+                                 </form>
+                                `
+                            );
+                            $('#uploadAdditionalImagesButton').click(function() {
+                                const filesInput = document.getElementById('additionalImages');
+                                const files = filesInput.files;
+
+                                if (files.length === 0) {
+                                    alert("파일을 선택해 주세요.");
+                                    return;
+                                }
+
+                                if (files.length > 5) {
+                                    alert("최대 5개의 파일만 업로드 할 수 있습니다.");
+                                    return;
+                                }
+
+                                const formData = new FormData();
+                                formData.append("id", productId);  // productId는 이전에 생성된 상품의 ID를 사용
+
+                                // 선택된 각 파일을 폼 데이터에 추가
+                                for (let i = 0; i < files.length; i++) {
+                                    formData.append("files", files[i]);
+                                }
+
+                                $.ajax({
+                                    url: '/productImage',
+                                    type: 'POST',
+                                    data: formData,
+                                    processData: false, // 필수: jQuery가 데이터를 문자열로 처리하지 않도록 설정
+                                    contentType: false, // 필수: jQuery가 Content-Type 헤더를 설정하지 않도록 설정
+                                    success: function(response) {
+                                        alert('상품 소개 사진들이 성공적으로 업로드 되었습니다.');
+                                        // Alert에서 OK를 누르면 인덱스 페이지로 리다이렉트
+                                        window.location.href = "/";
+                                    },
+                                    error: function(xhr, status, error) {
+                                        console.error('사진들 업로드 실패:', error);
+                                        alert('사진들 업로드에 실패했습니다. 다시 시도해 주세요.');
+                                    }
+                                });
+                            });
+                        },
+                        error: function (xhr, status, error) {
+                            console.error('썸네일 업로드 실패:', error);
+                            alert('썸네일 업로드에 실패했습니다. 다시 시도해 주세요.');
+                        }
+                    });
+                });
+                // 성공 시 추가 작업 (예: 사용자에게 알림 표시)
+            },
+            error: function(xhr, status, error) {
+                console.error('Failed to create product:', error);
+                // 실패 시 추가 작업 (예: 사용자에게 오류 메시지 표시)
+            }
+        });
+    }
+    function submitFormData(questionCount) {
+        let formData = {
+            model: "gpt-4o",
+            isProduct: true,
+            input: [],
+        };
+
+        // questionCount만큼 input 값을 수집
+        for (let i = 0; i < questionCount; i++) {
+            let inputVal = $(`#input${i}`).val();
+            console.log(inputVal);
+            formData.input.push(inputVal);
+        }
+        formData.input.push(dataLet.farm.name);
+        // 데이터 인코딩: 배열을 문자열로 변환 (콤마로 구분)
+        let encodedData = $.param({
+            model: formData.model,
+            isProduct: formData.isProduct,
+            input: formData.input.join(','), // 배열을 문자열로 변환
+        });
+
+        $.ajax({
+            url: '/api/gpt/chat',
+            type: 'POST',
+            contentType: 'application/x-www-form-urlencoded',
+            data: encodedData, // URL 쿼리 문자열 형식으로 전송
+            success: function (response) {
+                console.log('성공:', response);
+                name = response.data?.name || response.name;
+                detail = response.data?.detail || response.detail;
+                tags = response.data?.tags || response.tags || response.tag || response.data.tag;
+                $('#modalContent').html(
+                    `<h6>상품명: </h6> <h6>${name}</h6>
+     <br>
+     <h6>상품 소개: </h6> <h6>${detail}</h6>
+     <br>
+     <h6>태그 종류: </h6> <h6>${tags}</h6>
+     <br>
+     <h6>마음에 드시면 아래 카테고리를 선택 후 마음에 들어요 버튼을 눌러주세요.</h6>
+     <br>
+     <select id="categorySelect">
+        <option value="" disabled selected>카테고리를 선택하세요.</option>
+     </select>
+     <br>
+     <h6>원하시는 상품의 가격을 적어주세요.</h6>
+     <input type="text" id="price" placeholder="답변을 입력하세요"/>
+
+     <div class="modal-footer">
+         <button class="btn btn-primary" style="height: 40px; font-size: 18px;" id="submitBtn2">좋아요</button>
+         <button class="btn btn-secondary" style="height: 40px; font-size: 18px;" id="close2">취소</button>
+     </div>`
+                );
+                document.getElementById('price').addEventListener('input', function(event) {
+                    price = event.target.value; // 사용자가 입력한 값을 price 변수에 저장
+                    console.log('Price updated:', price); // 업데이트된 price 값을 콘솔에 출력
+                });
+                console.log(price); // 콘솔에 입력된 값을 출력
+
+                const options = Object.entries(dataLet.categories).map(([key, value]) =>
+                    `<option value="${key}">${value}</option>`
+                ).join(''); // 배열을 문자열로 변환
+                $('#categorySelect').append(options);
+                $('#categorySelect').on('change', function() {
+                    selectedValue = $(this).val(); // 선택된 값
+                    console.log('Selected Value:', selectedValue);
+                });
+                $('#close2').click(function (){
+                    closeComeBack();
+                });
+                $('#submitBtn2').click(function() {
+                    submitFormData2(name, detail,tags, dataLet.farm.id,selectedValue,price);
+                });
+
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                $('#modalContent').html("예상치 못한 문제 발생 다시 시도해 주세요.");
+            }
+        });
+    }
+    document.getElementById('oneTimeButton').addEventListener('click', function() {
+        this.style.display = 'none';
+    });
 </script>
 </body>
 </html>

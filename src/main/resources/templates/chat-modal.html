@@ -14,7 +14,7 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">무엇을 도와드릴까요?</h5>
+                    <h5 class="modal-title" id="exampleModalLabel">AI 상품 등록</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -24,15 +24,7 @@
                         <!-- 여기서 quest 리스트의 내용이 표시됩니다 -->
                     </div>
                     <!-- 기존 버튼을 새로운 버튼으로 교체 -->
-                    <button id="button1" class="hideable" onclick="updateModalContent('/modalContent1')">상품 등록</button>
-                </div>
-                <div class="modal-footer">
-                    <div class="input-group mb-3">
-                        <input type="text" class="form-control disabled-input" placeholder="작성란" aria-label="Input field" aria-describedby="button-addon2" disabled>
-                        <div class="input-group-append">
-                            <button class="btn btn-outline-secondary disabled-button" type="button" id="button-addon2" disabled>입력</button>
-                        </div>
-                    </div>
+                    <button id="oneTimeButton" class="btn btn-primary" style="width: 200px; height: 60px; font-size: 18px;" onclick="updateModalContent('/modalContent1')">상품 등록</button>
                 </div>
             </div>
         </div>
