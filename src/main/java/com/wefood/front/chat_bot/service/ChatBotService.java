@@ -30,8 +30,10 @@ public class ChatBotService {
 
     public void setImages(Long id, List<MultipartFile> multipartFile,boolean isProduct) {
         UploadImageRequestDto dto = new UploadImageRequestDto(multipartFile,id);
+        System.out.println(dto.toString());
         try {
             chatBotAdaptor.sendImageRequest(dto,isProduct);
+            System.out.println("어댑터끝");
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
