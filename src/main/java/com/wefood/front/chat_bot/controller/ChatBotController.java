@@ -70,7 +70,7 @@ public class ChatBotController {
         return response;
     }
 
-    @PostMapping("/farmImage")
+    @PostMapping("/farm-image")
     public ResponseEntity<String> farmImageUpload(
         @RequestParam("id") Long id,
         @RequestParam("files") List<MultipartFile> files) {
