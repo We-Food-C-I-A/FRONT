@@ -40,8 +40,7 @@ public class ChatBotController {
     @PostMapping("/productImage")
     public String productImageUpload(@RequestParam("id") Long id,
         @RequestParam("files") List<MultipartFile> files) {
-        System.out.println("id: "+id);
-        files.stream().forEach((s)-> System.out.println(s.getName()));
+
         chatBotService.setImages(id, files, PRODUCT);
         return "/index";
     }
@@ -93,7 +92,7 @@ public class ChatBotController {
     @ResponseBody
     public Map<String, Object> createProduct(@RequestBody CreateProductRequestDto createProductRequestDto){
         Map<String, Object> response = new HashMap<>();
-        response.put("productId",productService.create(createProductRequestDto));
+        response.put("productId",         productService.create(createProductRequestDto));
         return response;
     }
 }

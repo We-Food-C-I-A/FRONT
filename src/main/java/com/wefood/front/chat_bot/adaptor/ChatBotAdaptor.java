@@ -94,7 +94,7 @@ public class ChatBotAdaptor {
             .path(url)
             .build()
             .toUri();
-        System.out.println(uri.toString());
+
         // 요청 본문 생성
         MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
         body.add("id", requestDto.getId());
