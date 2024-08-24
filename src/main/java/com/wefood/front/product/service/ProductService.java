@@ -1,5 +1,6 @@
 package com.wefood.front.product.service;
 
+import com.wefood.front.chat_bot.dto.CreateProductRequestDto;
 import com.wefood.front.global.PageRequest;
 import com.wefood.front.product.adaptor.ProductAdaptor;
 import com.wefood.front.product.dto.ProductDetailResponse;
@@ -36,5 +37,9 @@ public class ProductService {
 
     public PageRequest<ProductResponse> getProductsBySearch(String searchWord, Long page, Long size) {
         return productAdaptor.getProductsBySearch(searchWord, page, size).getData();
+    }
+
+    public Long create(CreateProductRequestDto createProductRequestDto) {
+        return productAdaptor.setProduct(createProductRequestDto);
     }
 }

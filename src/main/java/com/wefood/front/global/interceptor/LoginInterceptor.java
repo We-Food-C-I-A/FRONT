@@ -20,11 +20,13 @@ public class LoginInterceptor implements HandlerInterceptor {
                 for (Cookie cookie : cookies) {
                     if ("id".equals(cookie.getName())) {
                         isLoggedIn = true;
-                    } else if ("isSeller".equals(cookie.getName())) {
-                        isSeller = true;
+                    }
+                    if ("isSeller".equals(cookie.getName())) {
+                        isSeller = Boolean.parseBoolean(cookie.getValue());
                     }
                 }
             }
+
 
             modelAndView.addObject("login", isLoggedIn);
             modelAndView.addObject("isSeller", isSeller);

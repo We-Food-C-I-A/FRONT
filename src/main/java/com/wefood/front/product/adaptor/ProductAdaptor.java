@@ -1,5 +1,6 @@
 package com.wefood.front.product.adaptor;
 
+import com.wefood.front.chat_bot.dto.CreateProductRequestDto;
 import com.wefood.front.config.BackAdaptorProperties;
 import com.wefood.front.global.Message;
 import com.wefood.front.global.PageRequest;
@@ -88,5 +89,10 @@ public class ProductAdaptor {
         ResponseEntity<Message<PageRequest<ProductResponse>>> exchange = restTemplate.exchange(uri, HttpMethod.GET, new HttpEntity<>(headers), new ParameterizedTypeReference<>() {
         });
         return exchange.getBody();
+    }
+
+    public Long setProduct(CreateProductRequestDto createProductRequestDto) {
+        CreateProductRequest createProductRequest = new CreateProductRequest(createProductRequestDto);
+        return restTemplate.postForEntity(backAdaptorProperties.getAddress() + "/api/farm/{id}/product", createProductRequest, Long.class, createProductRequestDto.getFarmId()).getBody();
     }
 }

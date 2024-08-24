@@ -36,13 +36,13 @@ import static org.springframework.http.HttpMethod.POST;
 @Component
 public class UserAdaptor {
 
-    @Qualifier("restTemplate")
     private final RestTemplate restTemplate;
 
     private final BackAdaptorProperties backAdaptorProperties;
     private static final String URL = "/api/users";
 
-    public UserAdaptor(RestTemplate restTemplate, BackAdaptorProperties backAdaptorProperties) {
+    public UserAdaptor(@Qualifier("restTemplate")
+    RestTemplate restTemplate, BackAdaptorProperties backAdaptorProperties) {
         this.restTemplate = restTemplate;
         this.backAdaptorProperties = backAdaptorProperties;
     }

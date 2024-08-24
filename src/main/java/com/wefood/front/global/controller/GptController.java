@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Arrays;
@@ -45,20 +46,13 @@ public class GptController {
     }
 
     @PostMapping("/chat")
-    public String chat(
+    @ResponseBody
+    public JsonNode chat(
             @NotNull @RequestParam("model") String model,
             @NotNull @RequestParam("isProduct") boolean isProduct,
-            Model view, @NotNull @RequestParam("input") String... input) {
+            @NotNull @RequestParam("input") String... input) {
 
-        // 서비스 호출
-
-        // 필요한 데이터를 모델에 추가
-        view.addAttribute("gpt",
-                chatGPTService.chat(model, endpointCharged, isProduct, input));  // 추가 데이터 예시
-        if (isProduct) {
-            return "fragments/modalContent :: modalContentFragment";  // 타임리프 조각을 반환
-        }
-        return "farm 알아서 처리하세요";
+        return chatGPTService.chat(model, endpointCharged, isProduct,input);  // 추가 데이터 예시
     }
 
     @PostMapping("/farm")

@@ -103,26 +103,13 @@ public class GptService {
             log.info(text);
 
             String jsonPart = text.substring(text.indexOf("{"));
-
+            log.info(jsonPart);
             // ObjectMapper를 사용해 문자열을 JsonNode로 변환
             ObjectMapper objectMapper = new ObjectMapper();
             JsonNode jsonNode = objectMapper.readTree(jsonPart);
 
             // 개별 필드 파싱
-            String name = jsonNode.get("name").asText();
-            String detail = jsonNode.get("detail").asText();
-            JsonNode tagsNode = jsonNode.get("tags");
-
-            // 태그들을 String 배열로 변환
-            String[] tags = objectMapper.convertValue(tagsNode, String[].class);
-
-            // 파싱된 값 출력
-            log.info("Name: " + name);
-            log.info("Detail: " + detail);
-            log.info("Tags: ");
-            for (String tag : tags) {
-                log.info(tag + " ");
-            }
+            log.info(jsonNode.asText());
             return jsonNode;
         } catch (Exception e) {
             log.error(e.toString());
