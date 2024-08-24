@@ -40,11 +40,8 @@ public class ChatBotService {
     }
 
     public void setThumbnail(Long id, MultipartFile multipartFile,boolean isProduct) {
-        UploadThumbnailRequestDto dto = new UploadThumbnailRequestDto();
-        dto.setFiles(multipartFile);
-        dto.setId(id);
         try {
-            chatBotAdaptor.sendThumbnailRequest(dto,isProduct);
+            chatBotAdaptor.sendThumbnailRequest(id,multipartFile,isProduct);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

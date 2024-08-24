@@ -45,43 +45,32 @@ public class ChatBotAdaptor {
         this.backAdaptorProperties = backAdaptorProperties;
     }
 
-    public void sendThumbnailRequest(UploadThumbnailRequestDto requestDto, boolean isProduct)
+    public void sendThumbnailRequest(Long id, MultipartFile multipartFile, boolean isProduct)
         throws IOException {
         String url = isProduct?PRODUCT_URL:FARM_URL;
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.MULTIPART_FORM_DATA);
-
-        URI uri = UriComponentsBuilder.fromUriString(backAdaptorProperties.getAddress())
+        URI uri = UriComponentsBuilder
+            .fromUriString(backAdaptorProperties.getAddress())
             .path(url+THUMBNAIL)
+            .encode()
             .build()
             .toUri();
 
-        MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
-        body.add("files", new ByteArrayResource(requestDto.getFiles().getBytes()) {
-            @Override
-            public String getFilename() {
-                return requestDto.getFiles().getOriginalFilename();
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.setContentType(MediaType.MULTIPART_FORM_DATA);
+
+        MultiValueMap<String, Object> multiValueMap = new LinkedMultiValueMap<>();
+
+        fileToByteArrayResource(multipartFile, multiValueMap, httpHeaders);
+
+        restTemplate.exchange(
+            uri,
+            HttpMethod.POST,
+            new HttpEntity<>(multiValueMap, httpHeaders),
+            new ParameterizedTypeReference<>() {
             }
-        });
-        body.add("id",requestDto.getId());
-        HttpEntity<MultiValueMap<String, Object>> entity = new HttpEntity<>(body, headers);
+        );
 
-        try {
-            ResponseEntity<Void> response = restTemplate.exchange(
-                uri,
-                HttpMethod.POST,
-                entity,
-                Void.class
-            );
-
-            if (response.getStatusCode() != HttpStatus.CREATED) {
-                throw new IOException("Failed to upload thumbnail. Status code: " + response.getStatusCode());
-            }
-
-        } catch (Exception e) {
-            throw new IOException("Error writing request body to server", e);
-        }
     }
 
     public void sendImageRequest(UploadImageRequestDto requestDto, boolean isProduct) throws IOException {
@@ -129,5 +118,18 @@ public class ChatBotAdaptor {
             new ParameterizedTypeReference<Map<String, Object>>() {
             }
         );
+    }
+    private void fileToByteArrayResource(MultipartFile image,
+        MultiValueMap<String, Object> multiValueMap, HttpHeaders multipartHeader)
+        throws IOException {
+        if (image != null) {
+            ByteArrayResource thumbnailAsResource = new ByteArrayResource(image.getBytes()) {
+                @Override
+                public String getFilename() {
+                    return image.getOriginalFilename();
+                }
+            };
+            multiValueMap.add("files", new HttpEntity<>(thumbnailAsResource, multipartHeader));
+        }
     }
 }
