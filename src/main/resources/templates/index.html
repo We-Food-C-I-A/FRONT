@@ -655,12 +655,13 @@
      <br>
      <form id="thumbnailUploadForm" enctype="multipart/form-data">
         <input type="file" id="thumbnailFile" name="files" accept="image/*" required />
-        <button type="button" class="btn btn-primary" style="height: 40px; font-size: 18px; id="uploadThumbnailButton">썸네일 업로드</button>
+        <button type="button" class="btn btn-primary" style="height: 40px; font-size: 18px;" id="uploadThumbnailButton">썸네일 업로드</button>
      </form>
     `
                 );
-                productId=response.productId
+                productId=response.productId;
                 $('#uploadThumbnailButton').click(function() {
+                    console.log("클릭");
                     const fileInput = document.getElementById('thumbnailFile');
                     const file = fileInput.files[0];
 
@@ -668,7 +669,7 @@
                         alert("파일을 선택해 주세요.");
                         return;
                     }
-
+                    console.log("파일선택완료")
                     const formData = new FormData();
                     formData.append("id", productId);  // productId는 서버에서 생성된 상품의 ID
                     formData.append("files", file);    // 선택한 파일을 폼 데이터에 추가
