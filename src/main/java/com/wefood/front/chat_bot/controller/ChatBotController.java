@@ -40,6 +40,7 @@ public class ChatBotController {
     @PostMapping("/productImage")
     public String productImageUpload(@RequestParam("id") Long id,
         @RequestParam("files") List<MultipartFile> files) {
+
         chatBotService.setImages(id, files, PRODUCT);
         return "/index";
     }
