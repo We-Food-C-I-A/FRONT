@@ -61,7 +61,6 @@ public class UserAdaptor {
     }
 
     public void farmImageCreate(MultipartFile[] multipartFiles, Long id) throws IOException {
-        System.out.println(multipartFiles[1].getName());
         String url = backAdaptorProperties.getAddress() + "/api/farm/upload-part";
         System.out.println(url);
         // URL에 id를 쿼리 파라미터로 추가
@@ -74,8 +73,6 @@ public class UserAdaptor {
         for (MultipartFile file : multipartFiles) {
             body.add("files", new FileSystemResource(convert(file)));
         }
-        System.out.println();
-
         // HTTP 헤더 설정
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.MULTIPART_FORM_DATA);
