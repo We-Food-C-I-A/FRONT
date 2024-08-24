@@ -62,7 +62,7 @@ public class ChatBotAdaptor {
         MultiValueMap<String, Object> multiValueMap = new LinkedMultiValueMap<>();
 
         fileToByteArrayResource(multipartFile, multiValueMap, httpHeaders);
-
+        multiValueMap.add("id",id);
         restTemplate.exchange(
             uri,
             HttpMethod.POST,
