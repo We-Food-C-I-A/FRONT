@@ -109,14 +109,11 @@ public class MarketPriceService {
     public List<MarketPriceItemResponse> getMarketPriceCookie(Long itemId, Cookie[] cookies) {
         MarketPriceResponse response;
         // 200, 400, 500, 100
-        switch (String.valueOf(itemId).charAt(0)) {
-            case '1' -> response = readValue(decompress(getCookieByName("price3", cookies)));
-            case '2' -> response = readValue(decompress(getCookieByName("price0", cookies)));
-            case '4' -> response = readValue(decompress(getCookieByName("price1", cookies)));
-            case '9' -> response = readValue(decompress(getCookieByName("price2", cookies)));
-            default -> {
-                return null;
-            }
+        switch (Math.toIntExact(itemId / 100 * 100)) {
+            case 100 -> response = readValue(decompress(getCookieByName("price3", cookies)));
+            case 200 -> response = readValue(decompress(getCookieByName("price0", cookies)));
+            case 400 -> response = readValue(decompress(getCookieByName("price1", cookies)));
+            default -> response = readValue(decompress(getCookieByName("price2", cookies)));
         }
 
         return response.getData().getItem().stream().filter(item -> item.getItem_code().equals(String.valueOf(itemId)) && !item.getDpr2().equals("-")).toList();
@@ -124,14 +121,11 @@ public class MarketPriceService {
 
     public List<MarketPriceItemResponse> findMarketPriceByItemId(Long itemId, List<MarketPriceResponse> marketPriceResponses) {
         MarketPriceResponse response;
-        switch (String.valueOf(itemId).charAt(0)) {
-            case '1' -> response = marketPriceResponses.get(3);
-            case '2' -> response = marketPriceResponses.get(0);
-            case '4' -> response = marketPriceResponses.get(1);
-            case '9' -> response = marketPriceResponses.get(2);
-            default -> {
-                return null;
-            }
+        switch (Math.toIntExact(itemId / 100 * 100)) {
+            case 100 -> response = marketPriceResponses.get(3);
+            case 200 -> response = marketPriceResponses.get(0);
+            case 400 -> response = marketPriceResponses.get(1);
+            default -> response = marketPriceResponses.get(2);
         }
 
         return response.getData().getItem().stream().filter(item -> item.getItem_code().equals(String.valueOf(itemId)) && !item.getDpr2().equals("-")).toList();
