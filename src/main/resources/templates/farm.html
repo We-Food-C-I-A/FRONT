@@ -472,7 +472,7 @@
                                 <h5 class="mb-3">농가 이미지 등록</h5>
                                 <form th:action="@{/farm-image}" method="POST" enctype="multipart/form-data">
                                     <div class="form-group">
-                                        <input type="file" name="images" multiple accept="image/*"
+                                        <input type="files" name="images" multiple accept="image/*"
                                                class="form-control-file">
                                     </div>
                                     <input type="hidden" name="id" th:value="${farm.id}">
